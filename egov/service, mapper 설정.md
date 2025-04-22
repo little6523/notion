@@ -1,0 +1,83 @@
+# service, mapper 설정
+
+생성일: 2025년 3월 6일 오후 1:43
+
+작성일: 25.03.06
+
+- service
+    - service (interface)
+    
+    ```java
+    package webview;
+    
+    public interface HelloWorldService {
+    	
+    	public String getHelloString();
+    	
+    }
+    ```
+    
+    - serviceImpl
+    
+    ```java
+    package webview;
+    
+    import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
+    import org.springframework.beans.factory.annotation.Autowired;
+    import org.springframework.stereotype.Service;
+    
+    @Service
+    public class HelloWorldServiceImpl extends EgovAbstractServiceImpl implements HelloWorldService {
+    	
+    	@Autowired
+    	private HelloWorldMapper helloWorldMapper;
+    	
+    	public String getHelloString() {
+    		return helloWorldMapper.getHelloString();
+    	};
+    }
+    
+    ```
+    
+
+- mapper
+    - 참고: [https://www.egovframe.go.kr/wiki/doku.php?id=egovframework:rte2:psl:dataaccess:mybatisguide](https://www.egovframe.go.kr/wiki/doku.php?id=egovframework:rte2:psl:dataaccess:mybatisguide)
+    - mapper (.java)
+    
+    ```java
+    package webview;
+    
+    // 전자정부프레임워크에서 지원하는 Mapper 어노테이션
+    import org.egovframe.rte.psl.dataaccess.mapper.Mapper;
+    
+    @Mapper
+    public interface HelloWorldMapper {
+    
+    	public String getHelloString();
+    
+    }
+    ```
+    
+    - mapper (.xml)
+    
+    ```xml
+    <?xml version="1.0" encoding="UTF-8" ?>
+    <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+     
+    <mapper namespace="webview.HelloWorldMapper">
+        <select id="getHelloString">
+            SELECT *
+            FROM helloworld
+        </select>
+    </mapper>
+    ```
+    
+    - application.properties
+    
+    ```xml
+    ...
+    mybatis.mapper-locations=webview/*.xml   => mapper가 존재하는 경로 설정
+    mybatis.configuration.map-underscore-to-camel-case=true
+    ...
+    ```
